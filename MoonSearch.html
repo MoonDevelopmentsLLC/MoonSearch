@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search Form with Dropdown</title>
+/* Optionally use cloudflare assets */
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <style>
+    form {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 35px;
+      background: linear-gradient(145deg, #2a2a2a, #1d1d1d, #333333);
+
+      border-radius: 52px;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+      font-family: 'Quicksand', sans-serif;
+      transition: all 0.3s ease;
+      overflow: hidden; 
+      transform: scale(0.98);
+    }
+
+    form:hover {
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+      transform: scale(1.02);
+      transition: all 0.3s ease-in-out;
+    }
+
+    h2 {
+      font-size: 18px;
+      color: #fff;
+      margin-bottom: 20px;
+      font-weight: 400;
+      letter-spacing: 1px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px;
+      font-size: 14px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      box-sizing: border-box;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    input:focus, select:focus {
+      border-color: #3498db;
+      box-shadow: 0 0 10px rgba(52, 152, 219, 0.6);
+    }
+
+    input[type="submit"] {
+      background: linear-gradient(145deg, #3498db, #2980b9);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 16px;
+      font-weight: 400;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #2980b9;
+      transform: scale(1.05);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    input[type="submit"]:active {
+      transform: scale(0.98);
+    }
+
+    div {
+      font-size: 11px;
+      color: #777;
+      margin-top: 5px;
+    }
+
+    /* Custom Dropdown Styling */
+    .dropdown-select {
+      position: relative;
+      width: 100%; /* Ensure dropdown takes full width of the form */
+    }
+
+    #searchEngineInput {
+      width: 100%; /* Ensure the input takes full width */
+      background-color: transparent; /* Make background transparent to blend with form */
+      border: 1px solid #ddd;
+      padding-right: 28px; /* Adjust padding for the dropdown icon */
+    }
+
+    .dropdown-list {
+      display: none;
+      position: absolute;
+      width: 100%;
+      top: 100%;
+      left: 0;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      z-index: 10;
+      max-height: 210px;
+      overflow-y: auto;
+    }
+
+    .dropdown-list li {
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      border-radius: 8px;
+    }
+
+    .dropdown-list li:hover {
+      background-color: #f0f4f8;
+    }
+
+    .dropdown-list li i {
+      margin-right: 10px;
+    }
+
+    /* Placeholder Text Blink */
+    .input-blink {
+      animation: blink 3.5s infinite;
+    }
+
+    @keyframes blink {
+      0% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+/* Style for the "Search All" button */
+    #searchAllButton {
+      background: linear-gradient(145deg, #27ae60, #2ecc71);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 11px;
+      font-weight: 400;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+      width: 100%; /* Make the button take the full width of the form */
+    }
+
+    #searchAllButton:hover {
+      background-color: #2ecc71;
+      transform: scale(1.05);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    #searchAllButton:active {
+      transform: scale(0.98);
+    }
+
+  </style>
+</head>
+<body>
+
+  <form id="searchForm" method="get" target="_blank">
+    <div style="text-align: center;">
+      <h2>Modular Passthrough SuperSearch</h2>
+
+      <!-- Custom Dropdown with Icons -->
+      <div class="dropdown-select">
+        <input type="text" id="searchEngineInput" readonly class="input-blink" placeholder="Choose search engine..." />
+        <ul class="dropdown-list" id="searchEngineList">
+          <li onclick="updateSearchEngine('https://searx.be/search', 'Searx')"><i class="fas fa-search"></i> Searx</li>
+          <li onclick="updateSearchEngine('https://www.google.com/search', 'Google')"><i class="fab fa-google"></i> Google</li>
+          <li onclick="updateSearchEngine('https://duckduckgo.com', 'DuckDuckGo')"><i class="fas fa-search"></i> DuckDuckGo</li>
+          <li onclick="updateSearchEngine('https://www.bing.com/search', 'Bing')"><i class="fab fa-microsoft"></i> Bing</li>
+          <li onclick="updateSearchEngine('https://search.yahoo.com/search', 'Yahoo')"><i class="fab fa-yahoo"></i> Yahoo</li>
+          <li onclick="updateSearchEngine('https://www.qwant.com', 'Qwant')"><i class="fas fa-search"></i> Qwant</li>
+        </ul>
+      </div>
+
+      <!-- Search Input -->
+      <input type="text" id="searchInput" name="q" size="30" maxlength="255" placeholder="Waiting for input..." />
+
+      <br>
+      <div>Type anything and press 'Search'!</div>
+      <br>
+
+      <!-- Submit Button -->
+      <input type="submit" value="Search" />
+      <br><br>
+
+      <!-- Search All Button -->
+      <button type="button" id="searchAllButton">SuperSearch All Engines <br> (Allow Popups may be required)</button>
+    </div>
+  </form>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Get the search parameter from the URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const searchQuery = urlParams.get('q');
+
+    // Get the search input element
+    const searchInput = document.getElementById('searchInput');
+
+    // If a search query exists in the URL, update the input value
+    if (searchQuery && searchInput) {
+      searchInput.value = decodeURIComponent(searchQuery);
+    }
+
+    // Ensure DuckDuckGo is the default search engine if none is selected
+    const searchForm = document.getElementById('searchForm');
+    const searchEngineInput = document.getElementById('searchEngineInput');
+
+    if (!searchEngineInput.value) {
+      searchForm.action = 'https://duckduckgo.com/?q=';
+      searchEngineInput.value = 'DuckDuckGo';
+    }
+  });
+
+  window.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+
+    // Parse the URL for the searchInput parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const searchValue = urlParams.get('q'); // 'q' is the parameter we're looking for
+
+    // If the searchInput parameter exists, set the input value
+    if (searchValue) {
+      searchInput.value = searchValue;  // Set the value directly
+      clearInterval(searchEngineBlinkInterval); // Stop blinking when there's a query
+      searchInput.placeholder = '';  // Clear the blinking placeholder text
+    } else {
+      // If there's no query in the URL, start the blinking placeholder
+      searchInput.placeholder = "Waiting for input...";
+      searchEngineBlinkInterval = setInterval(() => {
+        if (searchInput.placeholder === "Waiting for input...") {
+          searchInput.placeholder = "";
+        } else {
+          searchInput.placeholder = "Waiting for input...";
+        }
+      }, 750);
+    }
+  });
+
+  // Stop blinking when input is focused
+  const searchInput = document.getElementById('searchInput');
+  searchInput.addEventListener('focus', () => {
+    clearInterval(searchEngineBlinkInterval); // Stop blinking when focused
+    searchInput.placeholder = "Waiting for input..."; // Restore the placeholder text
+  });
+
+  // Restart blinking if input is empty when it loses focus
+  searchInput.addEventListener('blur', () => {
+    if (searchInput.value === '') {
+      searchEngineBlinkInterval = setInterval(() => {
+        if (searchInput.placeholder === "Waiting for input...") {
+          searchInput.placeholder = "";
+        } else {
+          searchInput.placeholder = "Waiting for input...";
+        }
+      }, 900);
+    }
+  });
+
+  // Update form action based on selected search engine
+  function updateSearchEngine(action, engine) {
+    document.getElementById('searchForm').action = action;
+    document.getElementById('searchEngineInput').value = engine;
+    document.getElementById('searchEngineList').style.display = 'none'; // Close dropdown
+    clearInterval(searchEngineBlinkInterval); // Stop blinking for search engine input
+    document.getElementById('searchEngineInput').classList.remove('input-blink'); // Remove blinking class
+  }
+
+  // Ensure Ecosia is used if no search engine is selected
+  function ensureDefaultSearchEngine() {
+    const searchForm = document.getElementById('searchForm');
+    const searchEngineInput = document.getElementById('searchEngineInput');
+
+    if (!searchEngineInput.value) {
+      searchForm.action = 'https://ecosia.com/?q=';
+      searchEngineInput.value = 'Ecosia';
+    }
+  }
+
+  // Toggle dropdown visibility
+  document.getElementById('searchEngineInput').addEventListener('click', function() {
+    const list = document.getElementById('searchEngineList');
+    list.style.display = (list.style.display === 'block') ? 'none' : 'block';
+  });
+
+  // Close dropdown when clicking outside
+  window.addEventListener('click', function(e) {
+    if (!e.target.closest('.dropdown-select')) {
+      document.getElementById('searchEngineList').style.display = 'none';
+    }
+  });
+
+  // Open all search engine tabs
+  function openAllSearches() {
+    const searchEngines = [
+        { name: 'Searx', url: 'https://searx.be/search?q=' },
+        { name: 'Google', url: 'https://www.google.com/search?q=' },
+        { name: 'DuckDuckGo', url: 'https://duckduckgo.com/?q=' },
+        { name: 'Bing', url: 'https://www.bing.com/search?q=' },
+        { name: 'Yahoo', url: 'https://search.yahoo.com/search?p=' },
+        { name: 'Qwant', url: 'https://www.qwant.com/?q=' }
+    ];
+
+    const query = document.getElementById('searchInput').value.trim();
+
+    if(query) {
+        searchEngines.forEach(engine => {
+            window.open(`${engine.url}${encodeURIComponent(query)}`, '_blank');
+        });
+    }
+  }
+
+  // Add event listener to 'Search All' button
+  document.getElementById('searchAllButton').addEventListener('click', openAllSearches);
+
+  // Ensure default search engine is set before submitting the form
+  document.getElementById('searchForm').addEventListener('submit', ensureDefaultSearchEngine);
+</script>
+
+
+</body>
+</html>
