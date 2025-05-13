@@ -277,14 +277,14 @@
     document.getElementById('searchEngineInput').classList.remove('input-blink'); // Remove blinking class
   }
 
-  // Ensure Ecosia is used if no search engine is selected
+  // Ensure duckduckgo is used if no search engine is selected
   function ensureDefaultSearchEngine() {
     const searchForm = document.getElementById('searchForm');
     const searchEngineInput = document.getElementById('searchEngineInput');
 
     if (!searchEngineInput.value) {
-      searchForm.action = 'https://ecosia.com/?q=';
-      searchEngineInput.value = 'Ecosia';
+      searchForm.action = 'https://duckduckgo.com/?q=';
+      searchEngineInput.value = 'DuckDuckGo';
     }
   }
 
